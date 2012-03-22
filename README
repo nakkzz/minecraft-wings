@@ -1,0 +1,31 @@
+This is basically the plugin by weasel5i2, all credits to him. I just added support for Minecraft 1.2.3 and switched to PermissionsEx
+
+Wings - Simple Flight
+Version: v1.4
+
+This plugin lets you fly around. Simply hold a feather in your hand and right-click with it to toggle flying and hovering on/off. First click will enable flight mode. A second right-click will switch you into hover mode. A third right-click will switch off flying and you will fall to the ground (without damage, as long as you're still holding the feather!)
+
+You will fly in the direction you're facing, so if you're going to hit that mountain, well.. PULL UP!! PULL UP!!!
+
+Features:
+Flying around in the sky like some crazy bird.
+Hovering! (mostly..) - while hovering, hold down SHIFT to move yourself upwards.
+Permissions node:
+- 'wings.fly'
+
+Configuration:
+The configuration is located in plugins/Wings/Settings.ini. The file looks like this:
+
+hoverMultiplier=0.0012410253
+hoverBoostMultiplier=0.00555
+allowOps=true
+flyingEatsFeathers=true
+defaultFeatherAmount=500
+flightSpeed=1.0
+
+* hoverMultiplier: The vector amount to achieve the player hovering effect. Your mileage may vary depending on how this is set.
+* hoverBoostMultiplier: The vector amount to get that extra upward boost when you press SHIFT whilst hovering.
+* allowOps: Allow Op users to fly, regardless of their Permissions setting.
+* flightSpeed: The amount to multiply the flight vector by. Don't set this too high or you may end up extremely far away from your intended destination!
+* flyingEatsFeathers: (disabled by default) - Set whether or not flying and hovering will consume feathers. Note that the feather must be held in the FIRST hand inventory slot #1 (at least until I can figure out how to get it to see them elsewhere in the player's inventory)
+* defaultFeatherAmount: This sets how many ticks each feather will last before being consumed. On my server, the default 500 setting makes them last approximately 15-20 seconds each before disappearing from the stack.
