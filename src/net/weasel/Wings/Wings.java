@@ -46,6 +46,7 @@ public class Wings extends JavaPlugin
 	public static boolean allowOps;
 	public static boolean flyingEatsFeathers;
 	public static Integer defaultFeatherAmount;
+	public static boolean falldamageWithoutFeather;
 	public static String iniFile = "plugins/Wings/Settings.ini";
 	
 	@Override
@@ -63,6 +64,7 @@ public class Wings extends JavaPlugin
 		System.out.println( "[Wings] Wings v" + this.getDescription().getVersion() + " disabled." );
 	}
 
+	// initialize
 	@Override
 	public void onEnable() 
 	{
@@ -78,6 +80,7 @@ public class Wings extends JavaPlugin
 		flyingEatsFeathers = getBooleanSetting( "flyingEatsFeathers", false );
 		defaultFeatherAmount = getIntSetting( "defaultFeatherAmount", 100 );
 		flightSpeed = getDblSetting( "flightSpeed", 1.0 );
+		falldamageWithoutFeather = getBooleanSetting( "falldamageWithoutFeather", false );
 		timer = getServer().getScheduler();
 		
 //		PluginManager pm = server.getPluginManager();
@@ -316,6 +319,7 @@ public class Wings extends JavaPlugin
     	return retVal;
     }
     
+    // generate a new config file
     public static boolean createIniFile()
     {
     	boolean retVal = false;
@@ -331,6 +335,7 @@ public class Wings extends JavaPlugin
 			outP.println( "allowOps=true" );
 			outP.println( "flyingEatsFeathers=false" );
 			outP.println( "defaultFeatherAmount=500" );
+			outP.println( "falldamageWithoutFeather=false" );
 			
 			outP.close();
 			retVal = true;

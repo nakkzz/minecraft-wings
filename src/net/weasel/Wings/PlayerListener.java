@@ -24,6 +24,7 @@ public class PlayerListener implements Listener // extends org.bukkit.event.play
 		server = plugin.getServer();
 	}
 
+	// Allow player flying around depending on state
 	@EventHandler
 	public void onPlayerMove( PlayerMoveEvent event )
 	{
