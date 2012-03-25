@@ -29,9 +29,16 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 /*import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;*/
 
+
 public class Wings extends JavaPlugin 
 {
-	public final static HashMap<Player,Integer> flyingPlayers = new HashMap<Player,Integer>();
+	public static enum flyingState {
+		NOT_FLYING,
+		FLYING,
+		HOVERING,
+	}
+	
+	public final static HashMap<Player,flyingState> flyingPlayers = new HashMap<Player,flyingState>();
 	public final static HashMap<Player,Location> hoverLocs = new HashMap<Player,Location>();
 	public final static HashMap<Player,Integer> featherPoints = new HashMap<Player,Integer>();
 	
@@ -135,12 +142,12 @@ public class Wings extends JavaPlugin
     	
     }
 	
-	public static Integer isFlying(final Player player)
+	public static flyingState isFlying(final Player player)
 	{
 		if(flyingPlayers.containsKey(player))
 			return flyingPlayers.get(player);
 		else
-			return 0;
+			return flyingState.NOT_FLYING;
 	}
 
 	public static Location getHoverLocation(final Player player)
@@ -151,7 +158,7 @@ public class Wings extends JavaPlugin
 			return player.getLocation();
 	}
 
-	public static void setFlying(final Player player, final Integer value)
+	public static void setFlying(final Player player, final flyingState value)
 	{
 		flyingPlayers.put(player,value);
 	}

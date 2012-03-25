@@ -29,13 +29,10 @@ public class EntityListener implements Listener//extends org.bukkit.event.entity
 		    	
 		    	if( Wings.isAllowed(player) )
 		    	{
-			        if( Wings.isFlying(player) >= 0 ) // does this make sense?
-			        {
-			    		if( Wings.falldamageWithoutFeather && player.getItemInHand().getType() != Material.FEATHER )
-			    			return;
-
-			        	event.setCancelled( true );	
-			        }
+		    		if( Wings.falldamageWithoutFeather && player.getItemInHand().getType() != Material.FEATHER )
+		    			return;
+		
+		    		event.setCancelled( true );
 		    	}
 		    }
 		    catch (Exception e) 

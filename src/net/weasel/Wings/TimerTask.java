@@ -1,5 +1,8 @@
 package net.weasel.Wings;
 
+import net.weasel.Wings.Wings.flyingState;
+
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -21,7 +24,7 @@ public class TimerTask implements Runnable
 	@Override
 	public void run() 
 	{
-		double M = Wings.hoverMultiplier;
+//		double M = Wings.hoverMultiplier;
 		
 		World world = null;
 		Player player = null;
@@ -34,9 +37,9 @@ public class TimerTask implements Runnable
 			{
 				player = world.getPlayers().get(P);
 				
-				if( Wings.isFlying( player ) == 2 )
+				if( Wings.isFlying( player ) == flyingState.HOVERING )
 				{
-					if( player.isSneaking() == true ) M = Wings.hoverBoostMultiplier;
+/*					if( player.isSneaking() == true ) M = Wings.hoverBoostMultiplier;
 					
 					double X = Wings.getHoverLocation(player).getX();
 					double Y = Wings.getHoverLocation(player).getY();
@@ -46,11 +49,22 @@ public class TimerTask implements Runnable
 					Vector hVector = new Vector( 0, M, 0 );
 					
 					Vector hover = pVector.multiply( hVector );
+					hover.clone();
 					
 					player.setVelocity( new Vector( 0,0,0 ) );
-					player.setVelocity( hover );
+					player.setVelocity( hover );*/
+
+					player.setVelocity( new Vector( 0,0,0 ) );
 					
-					if( Wings.flyingEatsFeathers == true && Wings.isFlying(player) > 0 )
+					Location last = Wings.getHoverLocation(player);
+					Location current = player.getLocation();
+					last.setPitch(current.getPitch());
+					last.setYaw(current.getPitch());
+					
+					player.teleport(last);
+					
+					
+					if( Wings.flyingEatsFeathers == true && Wings.isFlying(player) != flyingState.NOT_FLYING )
 					{
 						Integer fAmount = Wings.getFeatherPoints(player);
 						
@@ -65,7 +79,7 @@ public class TimerTask implements Runnable
 								if( player.getInventory().all(Material.FEATHER).get(0).getAmount() < 1 )
 								{
 									System.out.println( "out of feathers (OPM)");
-									Wings.setFlying( player, 0 );
+									Wings.setFlying( player, flyingState.NOT_FLYING );
 									player.sendMessage( "You are no longer flying." );
 								}
 								else
@@ -75,7 +89,7 @@ public class TimerTask implements Runnable
 	
 									if( player.getInventory().all(Material.FEATHER).get(0).getAmount() < 1 )
 									{
-										Wings.setFlying( player, 0 );
+										Wings.setFlying( player, flyingState.NOT_FLYING );
 										player.sendMessage( "You are no longer flying." );
 									}
 									else
@@ -88,7 +102,7 @@ public class TimerTask implements Runnable
 							}
 							catch( Exception e )
 							{
-								Wings.setFlying( player, 0 );
+								Wings.setFlying( player, flyingState.NOT_FLYING );
 								player.sendMessage( "You are no longer flying." );
 							}
 						}

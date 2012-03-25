@@ -1,5 +1,7 @@
 package net.weasel.Wings;
 
+import net.weasel.Wings.Wings.flyingState;
+
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -30,7 +32,7 @@ public class PlayerListener implements Listener // extends org.bukkit.event.play
 	{
 		Player player = event.getPlayer();
 		
-		if( Wings.isFlying( player ) == 1 )
+		if( Wings.isFlying( player ) == flyingState.FLYING )
 		{
 			if( player.getLocation().getY() < 300 )
 			{
@@ -39,7 +41,7 @@ public class PlayerListener implements Listener // extends org.bukkit.event.play
 			}
 		}
 
-		if( Wings.isFlying( player ) == 2 )
+		if( Wings.isFlying( player ) == flyingState.HOVERING )
 		{
 			double M = Wings.hoverMultiplier;
 			
@@ -53,12 +55,15 @@ public class PlayerListener implements Listener // extends org.bukkit.event.play
 			Vector hVector = new Vector( 0, M, 0 );
 			
 			Vector hover = pVector.multiply( hVector );
+			hover.clone();
 			
 			player.setVelocity( new Vector( 0,0,0 ) );
-			player.setVelocity( hover );
+//			player.setVelocity( hover );
+			
+			player.teleport(Wings.getHoverLocation(player));
 		}
 		
-		if( Wings.flyingEatsFeathers == true && Wings.isFlying(player) > 0 )
+		if( Wings.flyingEatsFeathers == true && Wings.isFlying(player) != flyingState.NOT_FLYING )
 		{
 			Integer fAmount = Wings.getFeatherPoints(player);
 			
@@ -73,7 +78,7 @@ public class PlayerListener implements Listener // extends org.bukkit.event.play
 					if( player.getInventory().all(Material.FEATHER).get(0).getAmount() < 1 )
 					{
 						System.out.println( "out of feathers (OPM)");
-						Wings.setFlying( player, 0 );
+						Wings.setFlying( player, flyingState.NOT_FLYING );
 						player.sendMessage( "You are no longer flying." );
 					}
 					else
@@ -83,7 +88,7 @@ public class PlayerListener implements Listener // extends org.bukkit.event.play
 		
 						if( player.getInventory().all(Material.FEATHER).get(0).getAmount() < 1 )
 						{
-							Wings.setFlying( player, 0 );
+							Wings.setFlying( player, flyingState.NOT_FLYING );
 							player.sendMessage( "You are no longer flying." );
 						}
 						else
@@ -96,13 +101,14 @@ public class PlayerListener implements Listener // extends org.bukkit.event.play
 				}
 				catch( Exception e )
 				{
-					Wings.setFlying( player, 0 );
+					Wings.setFlying( player, flyingState.NOT_FLYING );
 					player.sendMessage( "You are no longer flying." );
 				}
 			}
 		}
 	}
 	
+	// player using feather
 	@EventHandler
 	public void onPlayerInteract( PlayerInteractEvent event )
 	{
@@ -115,26 +121,26 @@ public class PlayerListener implements Listener // extends org.bukkit.event.play
 				if( event.getAction() == Action.RIGHT_CLICK_AIR || 
 					event.getAction() == Action.RIGHT_CLICK_BLOCK )
 				{
-					if( Wings.isFlying(player) == 0 )
+					if( Wings.isFlying(player) == flyingState.NOT_FLYING )
 					{
 						player.sendMessage( "You are now flying." );
 						
 						if( Wings.featherPoints.containsKey(player) == false )
 							Wings.setFeatherPoints( player, Wings.defaultFeatherAmount );
 						
-						Wings.setFlying( player, 1 );
+						Wings.setFlying( player, flyingState.FLYING );
 					}
-					else if( Wings.isFlying(player) == 1 )
+					else if( Wings.isFlying(player) == flyingState.FLYING )
 					{
 						Wings.setHoverLocation( player );
 						player.setVelocity( new Vector( 0,0,0 ) );
 						player.sendMessage( "You are now hovering." );
-						Wings.setFlying( player, 2 );
+						Wings.setFlying( player, flyingState.HOVERING );
 					}
 					else
 					{
 						player.sendMessage( "You are no longer flying." );
-						Wings.setFlying( player, 0 );
+						Wings.setFlying( player, flyingState.NOT_FLYING );
 					}
 	
 					event.setCancelled( true );
@@ -143,6 +149,7 @@ public class PlayerListener implements Listener // extends org.bukkit.event.play
 		}
 	}
 
+	// clean up when player disconnects
 	@EventHandler
 	public void onPlayerQuit( PlayerQuitEvent event )
 	{
